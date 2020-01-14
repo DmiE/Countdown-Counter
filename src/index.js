@@ -28,7 +28,9 @@ const calculateTimeToDate = dateOfEvent => {
   const timeToEvent = timeOfEvent - acctualTime;
 
   const days = Math.floor(timeToEvent / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeToEvent % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const hours = Math.floor(
+    (timeToEvent % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
   const minutes = Math.floor((timeToEvent % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((timeToEvent % (1000 * 60)) / 1000);
 
@@ -53,12 +55,17 @@ const calculateTimeToDate = dateOfEvent => {
 };
 
 const updateCountdown = time => {
-  counterDays.innerHTML = time.days.value;
-  counterHours.innerHTML = time.hours.value;
-  counterMinutes.innerHTML = time.minutes.value;
-  counterSeconds.innerHTML = time.seconds.value;
+  counterDays.innerText = time.days.value;
+  counterHours.innerText = time.hours.value;
+  counterMinutes.innerText = time.minutes.value;
+  counterSeconds.innerText = time.seconds.value;
 
-  if (time.days.value <= 0 && time.hours.value <= 0 && time.minutes.value <= 0 && time.seconds.value <= 0) {
+  if (
+    time.days.value <= 0 &&
+    time.hours.value <= 0 &&
+    time.minutes.value <= 0 &&
+    time.seconds.value <= 0
+  ) {
     counterDays.innerHTML = 0;
     counterHours.innerHTML = 0;
     counterMinutes.innerHTML = 0;
@@ -71,28 +78,40 @@ const setCountdownCircles = time => {
     value: time.days.value / time.days.maxValue,
     size: 80,
     fill: { color: "#fff" },
-    lineCap: "round"
+    lineCap: "round",
+    animation: {
+      duration: 400
+    }
   });
 
   $("#hours__circle").circleProgress({
     value: time.hours.value / time.hours.maxValue,
     size: 80,
     fill: { color: "#fff" },
-    lineCap: "round"
+    lineCap: "round",
+    animation: {
+      duration: 400
+    }
   });
 
   $("#minutes__circle").circleProgress({
     value: time.minutes.value / time.minutes.maxValue,
     size: 80,
     fill: { color: "#fff" },
-    lineCap: "round"
+    lineCap: "round",
+    animation: {
+      duration: 400
+    }
   });
 
   $("#seconds__circle").circleProgress({
     value: time.seconds.value / time.seconds.maxValue,
     size: 80,
     fill: { color: "#fff" },
-    lineCap: "round"
+    lineCap: "round",
+    animation: {
+      duration: 400
+    }
   });
 };
 
@@ -110,21 +129,32 @@ const shouldCountdownCircleUpdate = acctualTime => {
   }
 };
 
-const updateCountdownCircle = (circleObject, previousValue, acctualValue, maxValue) => {
-  $(circleObject).circleProgress({ animationStartValue: previousValue / maxValue, value: acctualValue / maxValue });
+const updateCountdownCircle = (
+  circleObject,
+  previousValue,
+  acctualValue,
+  maxValue
+) => {
+  $(circleObject).circleProgress({
+    animationStartValue: previousValue / maxValue,
+    value: acctualValue / maxValue
+  });
 };
 
 setCountdownCircles(calculateTimeToDate(eventDate));
 previouseTime = calculateTimeToDate(eventDate);
 
-setTimeout(function() {
-  const countdownInterval = setInterval(function() {
-    const time = calculateTimeToDate(eventDate);
-    updateCountdown(time);
-    shouldCountdownCircleUpdate(time);
+const countdownInterval = setInterval(function() {
+  const time = calculateTimeToDate(eventDate);
+  updateCountdown(time);
+  shouldCountdownCircleUpdate(time);
 
-    if (time.seconds.value <= 0 && time.minutes.value <= 0 && time.hours.value <= 0 && time.days.value <= 0) {
-      clearInterval(countdownInterval);
-    }
-  }, 500);
+  if (
+    time.seconds.value <= 0 &&
+    time.minutes.value <= 0 &&
+    time.hours.value <= 0 &&
+    time.days.value <= 0
+  ) {
+    clearInterval(countdownInterval);
+  }
 }, 500);
